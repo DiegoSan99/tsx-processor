@@ -1,0 +1,5 @@
+.vscode
+.env
+.idea/
+env.json
+main

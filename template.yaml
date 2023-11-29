@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: A Lambda function that processes S3 events.
+
+Resources:
+  TransactionProcessorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: main # assuming your compiled binary is named 'main'
+      Runtime: go1.x
+      Timeout: 15
+      Events:
+        S3BucketEvent:
+          Type: S3
+          Properties:
+            Bucket: !Ref S3Bucket
+            Events: s3:ObjectCreated:*
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: your-s3-bucket-name
+
+Outputs:
+  TransactionProcessorFunction:
+    Description: "Lambda Function ARN"
+    Value: !GetAtt TransactionProcessorFunction.Arn
+
+  TransactionProcessorFunctionIamRole:
+    Description: "Implicit IAM Role created for Transaction Processor function"
+    Value: !GetAtt TransactionProcessorFunctionRole.Arn
